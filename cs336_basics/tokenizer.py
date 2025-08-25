@@ -9,11 +9,18 @@ class Tokenizer:
         self, 
         vocab: dict[int, bytes], 
         merges: list[tuple[bytes, bytes]], 
-        special_tokens: list[str] = None,
+        special_tokens: list[str] | None = None,
     ):
+        """tokenize text
+
+        Args:
+            vocab (dict[int, bytes]): trained vocab
+            merges (list[tuple[bytes, bytes]]): trained merges
+            special_tokens (list[str] | None, optional): preserved token. Defaults to None.
+        """
         self.vocab: dict[int, bytes] = vocab
         self.merges: list[tuple[bytes, bytes]] = merges
-        self.special_tokens: list[str] = special_tokens
+        self.special_tokens: list[str] | None = special_tokens
         
         if special_tokens is not None:
             for st in special_tokens:

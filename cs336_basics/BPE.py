@@ -7,14 +7,21 @@ import pickle
 
 class BPE:
     def __init__(
-        self, input_path: str, 
+        self, input_path: str | os.PathLike, 
         vocab_size: int, 
         special_tokens: list[str],
     ):
-        self.input_path: str = input_path
+        """Byte-Pair Encoding tokenizer
+
+        Args:
+            input_path (str): file path
+            vocab_size (int): the size of vocabulary
+            special_tokens (list[str]): preserved as sigletoken
+        """
+        self.input_path: str | os.PathLike = input_path
         self.vocab_size: int = vocab_size
         self.special_tokens: list[str] = special_tokens
-        self.split_special_token: bytes = b'<|endoftext|>' if '<|endoftext|>' in special_tokens else special_tokens[0]
+        self.split_special_token: bytes = b'<|endoftext|>' if '<|endoftext|>' in special_tokens else special_tokens[0].encode("utf-8")
         
         self.vocab: dict[int, bytes] = {}
         self.merges: list[tuple[bytes, bytes]] = []
@@ -28,7 +35,7 @@ class BPE:
     
     def train(self):
         file = open(self.input_path, "rb")
-        num_cpus = os.cpu_count()
+        num_cpus = os.cpu_count() or 1
         boundaries = self.find_chunk_boundaries(file, num_cpus, self.split_special_token)
         file.close()
         
