@@ -1,4 +1,4 @@
-from cs336_basics.softmax import softmax
+from cs336_basics.funciton import softmax
 from cs336_basics.linear import Linear
 import torch
 from torch import nn
@@ -45,6 +45,7 @@ class MultiheadSelfAttention(nn.Module):
         super().__init__()
         self.d_k = d_model // num_head
         self.use_rope = use_rope
+        self.device = device
         
         self.W_q = Linear(d_model, d_model, device, dtype)
         self.W_k = Linear(d_model, d_model, device, dtype)
@@ -72,7 +73,7 @@ class MultiheadSelfAttention(nn.Module):
             Q = self.RoPE.forward(Q, token_positions)
             K = self.RoPE.forward(K, token_positions)
         
-        mask = torch.triu(torch.ones(seq_length, seq_length, dtype=torch.bool), diagonal=1)
+        mask = torch.triu(torch.ones(seq_length, seq_length, dtype=torch.bool, device=Q.device), diagonal=1)
         
         attn = ScaledDotProductAttention(Q, K, V, ~mask)
         attn = rearrange(attn, "... num_heads queries d_k -> ... queries (num_heads d_k)")

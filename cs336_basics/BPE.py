@@ -97,9 +97,11 @@ class BPE:
         return self.vocab
     
     def save(self, vocab_filepath, merges_filepath):
+        os.makedirs(os.path.dirname(vocab_filepath), exist_ok=True)
         with open(vocab_filepath, "wb") as f:
             pickle.dump({"vocab": self.vocab}, f)
         
+        os.makedirs(os.path.dirname(merges_filepath), exist_ok=True)
         with open(merges_filepath, "wb") as f:
             pickle.dump({"merges": self.merges}, f)
             

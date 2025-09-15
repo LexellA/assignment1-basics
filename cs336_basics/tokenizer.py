@@ -38,11 +38,11 @@ class Tokenizer:
     ):
         vocab = {}
         merges = []
-        with open(vocab_filepath, "wb") as f:
-            vocab = pickle.load(f)
+        with open(vocab_filepath, "rb") as f:
+            vocab = pickle.load(f)["vocab"]
             
-        with open(merges_filepath, "wb") as f:
-            merges = pickle.load(f)
+        with open(merges_filepath, "rb") as f:
+            merges = pickle.load(f)["merges"]
         
         return cls(vocab, merges, special_tokens)
     
@@ -55,8 +55,10 @@ class Tokenizer:
         PAT = r"""'(?:[sdmt]|ll|ve|re)| ?\p{L}+| ?\p{N}+| ?[^\s\p{L}\p{N}]+|\s+(?!\S)|\s+"""
 
         result = []
-        
+        i=0
         for split in split_text:
+            if not split:
+                continue
             if self.special_tokens is not None and split in self.special_tokens:
                 result.append(self.vocab_reverse[split.encode('utf-8')])
                 continue
