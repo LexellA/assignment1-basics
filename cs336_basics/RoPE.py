@@ -48,7 +48,7 @@ class RotaryPositionalEmbedding(nn.Module):
         x_odd = x[1]
         
         x_rot_even = x_even * cos - x_odd * sin
-        x_rot_odd = x_even * sin + x_odd * cos
+        x_rot_odd = x_odd * cos + x_even * sin
         
         x_rot = rearrange([x_rot_even, x_rot_odd], "two ... seq d -> ... seq (d two)")
         

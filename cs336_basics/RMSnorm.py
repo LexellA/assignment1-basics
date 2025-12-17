@@ -19,12 +19,12 @@ class RMSNorm(nn.Module):
         
     def forward(
         self,
-        x: Float[torch.Tensor, "batch seq d_model"]
-    ) -> Float[torch.Tensor, "batch seq d_model"]:
+        x: Float[torch.Tensor, "... seq d_model"]
+    ) -> Float[torch.Tensor, "... seq d_model"]:
         in_dtype = x.dtype
-        x.to(torch.float32)
+        x = x.to(torch.float32)
         
-        rms = reduce(x ** 2, "batch seq d_model -> batch seq 1", "mean")
+        rms = reduce(x ** 2, "... seq d_model -> ... seq 1", "mean")
         rms = (rms + self.eps).sqrt()
         
         result = (x / rms) * self.gain

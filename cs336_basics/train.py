@@ -7,7 +7,7 @@ import os
 from cs336_basics.transformer import TransformerLM
 from cs336_basics.AdamW import AdamW
 from cs336_basics.funciton import load_checkpoint, save_checkpoint, data_loading, gradient_clipping, learning_rate_schedule
-from cs336_basics.loss import cross_entorpy
+from cs336_basics.loss import cross_entropy
 
 def main():
     parser = argparse.ArgumentParser()
@@ -108,7 +108,7 @@ def main():
             )
             
             logits = model(inputs)
-            loss = cross_entorpy(logits, targets)
+            loss = cross_entropy(logits, targets)
             
             optimizer.zero_grad(set_to_none=True)
             loss.backward()
@@ -178,7 +178,7 @@ def main():
                     device
                 )
                 logits = model(xb)
-                vloss = cross_entorpy(logits, yb)
+                vloss = cross_entropy(logits, yb)
                 val_losses.append(vloss.item())
         
 
